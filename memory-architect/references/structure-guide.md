@@ -31,7 +31,7 @@ Post-reorganization targets:
 - [Only instructions that apply everywhere, no exceptions]
 
 ## Imports
-@.claude/docs/architecture-decisions.md
+
 ```
 
 Files in `.claude/rules/` load automatically — no `@path` import needed for them.
