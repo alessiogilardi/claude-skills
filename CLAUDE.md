@@ -70,11 +70,21 @@ implemented as a script rather than left to freeform generation.
   elsewhere — treat that file as the source of truth if asked to reorganize memory here too.
   Note: this repo's own `CLAUDE.md` is intentionally short-form documentation, not a target
   for that skill's split thresholds.
+- **brainstorm** — pure discovery conversation that runs *before* `write-plan`. Explores
+  project context, asks scoping questions one at a time (multiple-choice via
+  `AskUserQuestion`), and ends at a confirmed Understanding card (Problem/Non-Goals/Affected
+  Areas/Success Criteria/Effort + slug) persisted to the target project's
+  `docs/plans/.brainstorm/<slug>.md` via its own `scripts/create_card.py` — the skill's only
+  write path (otherwise read-only + `AskUserQuestion`). Never writes plan files or code.
 - **write-plan** — governs writing/updating technical plans under a *target* project's
-  `docs/plans/`. Enforces a Draft → Reviewed → Implemented → Archived lifecycle, a blocking
-  gate on slug/effort confirmation before scaffolding, and mechanical validation via its own
-  `scripts/create_plan.py` / `generate_index.py` / `validate_plan.py`. `_index.md` is always
-  generated, never hand-edited.
+  `docs/plans/`. Delegates all discovery/scoping to `brainstorm` (invoking it unless a
+  confirmed card file already exists for the slug), then runs approach exploration,
+  design, scaffolding, and a Draft → Reviewed → Implemented → Archived lifecycle with
+  mechanical validation via its own `scripts/create_plan.py` / `generate_index.py` /
+  `validate_plan.py`. `create_plan.py` enforces the brainstorm gate mechanically: it
+  refuses to scaffold without a confirmed card, pre-fills the plan from it, then deletes
+  it (the plan becomes the single source of truth). `_index.md` is always generated,
+  never hand-edited.
 
 When modifying a skill's `SKILL.md`, keep the frontmatter `description` accurate — that field
 is what determines whether Claude reaches for the skill in an unrelated conversation.
