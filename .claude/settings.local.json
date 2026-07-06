@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" help)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" help deploy)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" list)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" status)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" deploy -DryRun)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" deploy -DryRun 2>&1 | Select-Object -First 5)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" deploy -Skills \"commit,memory-architect\" -DryRun)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" deploy -Skills \"nonexistent\" -DryRun)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" deploy)",
+      "PowerShell(& \"C:\\\\Users\\\\alessio.gilardi\\\\PycharmProjects\\\\Personal\\\\claude-skills\\\\skills.ps1\" help status)",
+      "Bash(rtk find *)",
+      "Bash(rtk git *)",
+      "Bash(rtk read *)"
+    ]
+  }
+}
