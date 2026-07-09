@@ -19,7 +19,7 @@ allowed-tools:
 Create a task for each of these items and complete them strictly in order:
 
 1. **Ensure Understanding**: Check that a confirmed Understanding card file exists at `docs/plans/.brainstorm/<slug>.md` (`confirmed: true`); if not, invoke the `brainstorm` skill first.
-2. **Approach proposals**: Present 2–3 options with trade-offs and your recommendation.
+2. **Confirm & detail the direction**: The leaning direction already comes from `brainstorm` (seeded in the plan's *Decisions*). Confirm it with the user and detail it — reopen a full approach exploration only if it is unclear or absent (see below).
 3. **Design presentation**: Present design proportional to effort; get approval (single message for S/M; macro-sections for L/XL — see Design Presentation below).
 4. **Scaffolding**: Run `create_plan.py` to create the plan file and regenerate the index.
 5. **Write plan content**: Fill in all sections following the conventions below.
@@ -31,7 +31,7 @@ Create a task for each of these items and complete them strictly in order:
 
 ### Step 0 — **Ensure Understanding (delegate to `brainstorm`)**
 
-`write-plan` never runs its own discovery conversation — that responsibility belongs entirely to the [`brainstorm`](../brainstorm/SKILL.md) skill, which explores context, asks scoping questions one at a time, and persists a confirmed **Understanding card** (Problem/Motivation, Non-Goals, Affected Areas, Success Criteria, Effort) to `docs/plans/.brainstorm/<slug>.md` after the user explicitly confirms *slug* and *effort*.
+`write-plan` never runs its own discovery conversation — that responsibility belongs entirely to the [`brainstorm`](../brainstorm/SKILL.md) skill, which explores the problem and the candidate directions of intervention as a mentor, then persists a confirmed **Understanding card** (Problem/Motivation, Non-Goals, Affected Areas, leaning Direction, Success Criteria, Effort) to `docs/plans/.brainstorm/<slug>.md` after the user explicitly confirms *slug* and *effort*. Scaffolding seeds the plan's *Decisions* from that leaning direction.
 
 Before doing anything else:
 
@@ -45,11 +45,11 @@ Before doing anything else:
 
 ### Step 1 — **Exploration and Design**
 
-#### Approach Exploration
+#### Confirm the direction (explored in `brainstorm`)
 
-* Propose 2–3 different approaches highlighting their trade-offs.
-* Present options conversationally, clearly stating your recommendation and the reasoning behind it.
-* Always start by presenting the recommended option and explaining why.
+* The leaning direction and the alternatives already weighed come from `brainstorm`, seeded into the plan's *Decisions* section. Do **not** re-run a full approach exploration by default.
+* Confirm that direction with the user, then detail it: turn it into concrete decisions with rationale.
+* Reopen a full approach exploration — 2–3 options with trade-offs, recommendation first — **only** when the direction is genuinely unclear, the card predates this flow (no direction seeded), or new information invalidates it. Say explicitly why you are reopening it.
 
 #### Design Presentation
 

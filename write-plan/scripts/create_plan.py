@@ -47,7 +47,7 @@ References:
 
 ## Decisions
 
-
+{decisions}
 
 ## Open questions / Risks
 
@@ -204,6 +204,23 @@ def _card_context(sections: dict[str, str]) -> str:
     return "\n\n".join(p for p in parts if p)
 
 
+def _card_decisions(sections: dict[str, str]) -> str:
+    """Build the plan's Decisions seed from the card's leaning direction.
+
+    The brainstorm skill records a leaning direction of intervention (and the
+    alternatives it weighed) in the card. It seeds the plan's Decisions section
+    as a starting point for write-plan to confirm and detail.
+
+    Args:
+        sections: Parsed card sections.
+
+    Returns:
+        Markdown text for the plan's "Decisions" section, or an empty string
+        when the card carries no direction (e.g. small tasks).
+    """
+    return sections.get("Direction / Approach", "")
+
+
 def _find_existing_subdir(plans_dir: Path, topic_slug: str) -> Path | None:
     """Return the existing sub-directory for *topic_slug*, if any.
 
@@ -241,7 +258,13 @@ def _ensure_subdir_index(
         "sub-plans, what each step covers, and how they relate to each other. -->\n"
     )
     if card_sections:
-        for name in ("Problem / Motivation", "Non-Goals", "Affected Areas", "Success Criteria"):
+        for name in (
+            "Problem / Motivation",
+            "Non-Goals",
+            "Affected Areas",
+            "Direction / Approach",
+            "Success Criteria",
+        ):
             body = card_sections.get(name, "")
             if body:
                 content += f"\n## {name}\n\n{body}\n"
@@ -318,6 +341,7 @@ def main() -> None:
     effort = args.effort
     context = ""
     non_goals = ""
+    decisions = ""
 
     if args.subdir is not None:
         target_dir = _find_existing_subdir(plans_dir, args.subdir)
@@ -339,6 +363,7 @@ def main() -> None:
         effort = effort or card_fm.get("effort", "M")
         context = _card_context(card_sections)
         non_goals = card_sections.get("Non-Goals", "")
+        decisions = _card_decisions(card_sections)
         target_dir = plans_dir
 
     filename = _build_filename(today, args.slug, args.step)
@@ -349,7 +374,11 @@ def main() -> None:
         sys.exit(1)
 
     content = TEMPLATE.format(
-        effort=effort, title=title, context=context, non_goals=non_goals
+        effort=effort,
+        title=title,
+        context=context,
+        non_goals=non_goals,
+        decisions=decisions,
     )
     filepath.write_text(content, encoding="utf-8")
     print(str(filepath))
