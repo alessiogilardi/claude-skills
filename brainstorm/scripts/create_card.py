@@ -9,7 +9,10 @@ Usage:
     # Create the card (or overwrite it while still unconfirmed):
     uv run .claude/skills/brainstorm/scripts/create_card.py <slug> \\
         --effort S|M|L|XL --problem "..." --non-goals "..." \\
-        --affected-areas "..." [--success-criteria "..."] [--title "Title"]
+        --affected-areas "..." [--direction "..."] [--success-criteria "..."] \\
+        [--title "Title"]
+
+    --direction and --success-criteria are mandatory for L/XL effort.
 
     # Confirm it after the user's explicit approval in chat:
     uv run .claude/skills/brainstorm/scripts/create_card.py <slug> --confirm
@@ -41,6 +44,12 @@ confirmed: false
 ## Affected Areas
 
 {affected_areas}
+"""
+
+DIRECTION_SECTION = """
+## Direction / Approach
+
+{direction}
 """
 
 SUCCESS_SECTION = """
@@ -136,6 +145,12 @@ def _create(args: argparse.Namespace, card_path: Path) -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+    if args.effort in ("L", "XL") and not args.direction:
+        print(
+            "Error: --direction is required for L/XL effort",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     if card_path.is_file() and CONFIRMED_TRUE_RE.search(
         card_path.read_text(encoding="utf-8")
@@ -155,6 +170,8 @@ def _create(args: argparse.Namespace, card_path: Path) -> None:
         non_goals=args.non_goals.strip(),
         affected_areas=args.affected_areas.strip(),
     )
+    if args.direction:
+        content += DIRECTION_SECTION.format(direction=args.direction.strip())
     if args.success_criteria:
         content += SUCCESS_SECTION.format(
             success_criteria=args.success_criteria.strip()
@@ -186,6 +203,13 @@ def main() -> None:
     parser.add_argument("--non-goals", help="What is explicitly excluded")
     parser.add_argument("--affected-areas", help="Modules, files, or components impacted")
     parser.add_argument(
+        "--direction",
+        help=(
+            "Leaning direction of intervention plus alternatives weighed "
+            "(required for L/XL); seeds the plan's Decisions section"
+        ),
+    )
+    parser.add_argument(
         "--success-criteria",
         help="Observable outcomes defining success (required for L/XL)",
     )
@@ -209,6 +233,7 @@ def main() -> None:
             args.problem,
             args.non_goals,
             args.affected_areas,
+            args.direction,
             args.success_criteria,
             args.title,
         )
